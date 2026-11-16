@@ -237,7 +237,7 @@ Entries marked "(addition)" are not part of the reference table (`spec/guideline
 | GameTile | `z-game-grid`, `button[zGameTile]`; `a[zGameTile]` (addition) | `title`, `price`, `cover`, `selected`; `coverSrcset`, `coverSizes`, `coverLoading`, `(coverError)` (additions); the link has the same inputs and `(coverError)`, no `selected` |
 | PriceSummary | `z-price-summary` | `label`, `price`, `period`, `lines: {label, value}[]`, `note`; content is the button |
 | SpecList | `z-spec-list` | `items: {term, value, note, mono}[]` |
-| Faq | `z-faq` | `question`, `open`; content is the answer |
+| Faq | `z-faq` | `question`, `open`; content is the answer; `headingLevel` (addition) |
 | Theme | service `ZTheme`, `provideZenitTheme(config)` | `scheme()`, `resolvedScheme()`, `accent()`, `setScheme(id)`, `setAccent(id)`, `reset()`; config `schemes`, `accents`, `defaultScheme`, `defaultAccent`, `storageKey`, `target` |
 | Labels | `provideZenitLabels(partial)`, `Z_LABELS`, `Z_LABELS_DE`, `Z_LABELS_EN` | one key per built-in text; the inputs of the components still win |
 

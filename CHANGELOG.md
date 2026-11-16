@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.4] - 2026-11-16
+
+### Added
+
+- **FAQ questions as headings.** `z-faq` takes the optional input `headingLevel` (`2` to `6`, also as a static attribute such as `headingLevel="3"`). With it the question is rendered as `<summary><hN class="z-faq__q">…</hN></summary>`, so the questions of a public page stand in its heading outline below the section heading. The new rule `.z-faq .z-faq__q` removes the browser margin and inherits font and letter spacing from the `<summary>`, so the question looks the same as before, also where the application styles every heading. Without the input, or with any other value, the markup is that of 0.2.3. Guide: `docs/components/faq.md`.
+
 ## [0.2.3] - 2026-10-16
 
 ### Added

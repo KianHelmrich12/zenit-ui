@@ -79,7 +79,7 @@ Selektoren und Eingaben sind verbindlich, damit Seiten und Bausteine parallel en
 | Disclosure | `z-disclosure` | `title`, `summary`, `[(open)]` |
 | InputAction | `z-input-action` | `label`, `actionLabel`, `[(value)]`, `success`, `error`, `loading`, `(action)` |
 | CostChart | `z-cost-chart` | `base`, `rate`, `cap`, `maxHours`, `caption` |
-| Faq | `z-faq` | `question`, `open`; Inhalt ist die Antwort |
+| Faq | `z-faq` | `question`, `open`; Inhalt ist die Antwort; `headingLevel: 2 \| 3 \| 4 \| 5 \| 6` (Ergänzung) |
 
 ## Reihenfolge der Bausteine
 
