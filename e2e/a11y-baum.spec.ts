@@ -998,6 +998,39 @@ test.describe('game tiles', () => {
 });
 
 /* ------------------------------------------------------------------ *
+ * The FAQ of /werkzeuge
+ * ------------------------------------------------------------------ */
+
+/**
+ * The demo FAQ sets headingLevel="3", so every question is an h3 inside its
+ * `<summary>` and stands in the outline directly below the section heading
+ * "Faq" (h2). Read out of the tree, because a heading inside a `<summary>` only
+ * counts if the browser keeps it there; the generic outline test above only
+ * proves that no level is skipped.
+ */
+test.describe('faq', () => {
+  test('the questions on /werkzeuge are h3 below the section heading', async ({ page }) => {
+    await seiteOeffnen(page, 'werkzeuge', 1440);
+    const fragen = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('details.z-faq > summary')).map(
+        (s) => s.textContent?.trim() ?? '',
+      ),
+    );
+    const liste = ueberschriften(await berichtLesen(page));
+    const ab = liste.findIndex((u) => u.stufe === 2 && u.name === 'Faq');
+    const danach = liste.slice(ab + 1);
+    const ende = danach.findIndex((u) => u.stufe <= 2);
+
+    expect(ab, 'Abschnitt "Faq" als h2').toBeGreaterThan(-1);
+    expect(fragen.length, 'die Seite hat Fragen').toBeGreaterThan(0);
+    expect(
+      (ende < 0 ? danach : danach.slice(0, ende)).map((u) => `${u.tag} level ${u.stufe} ${u.name}`),
+      'jede Frage ist ein h3 unter "Faq"',
+    ).toEqual(fragen.map((f) => `h3 level 3 ${f}`));
+  });
+});
+
+/* ------------------------------------------------------------------ *
  * Opened overlays
  * ------------------------------------------------------------------ */
 
