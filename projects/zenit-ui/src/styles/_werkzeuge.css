@@ -101,6 +101,12 @@
    question keeps it, otherwise there would be 2px between the questions. */
 z-faq:not(:last-of-type) .z-faq { border-bottom: 0; }
 
+/* Addition for headingLevel: the question as h2 to h6 looks exactly like the
+   bare summary text (no browser margin, no heading size). The two classes
+   outweigh a global heading rule of the application such as
+   html:not(.font-mono) h3 { font-family; letter-spacing }. */
+.z-faq .z-faq__q { margin: 0; font: inherit; letter-spacing: inherit; }
+
 /* The button "Zum Ende" does not appear in the preview, because the preview
    does not scroll. It sits between log and input. Tokens only. */
 .z-console__end { display: flex; justify-content: center; padding: var(--space-2); border-top: 1px solid var(--border); }

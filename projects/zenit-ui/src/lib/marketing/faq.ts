@@ -7,17 +7,20 @@ import { booleanAttribute, ChangeDetectionStrategy, Component, input } from '@an
  * `<summary>` and the answer in `<p class="z-faq__body">`. Because it is the
  * native element, opening and closing work without JavaScript, the disclosure
  * is reachable by keyboard and announced with its expanded state; the component
- * adds no keyboard handling of its own.
+ * adds no keyboard handling of its own. With {@link headingLevel} the question
+ * inside the `<summary>` becomes a heading `h2` to `h6` with the class
+ * `z-faq__q`, so the questions join the heading outline of the page.
  *
  * Put several of them under one another, the first one open. Answers run two to
  * three sentences with concrete numbers.
  *
  * @example
  * ```html
- * <z-faq question="Wie schnell ist mein Server online?" open>
+ * <h2>Häufige Fragen</h2>
+ * <z-faq question="Wie schnell ist mein Server online?" headingLevel="3" open>
  *   Nach der Bestellung dauert die Einrichtung in der Regel etwa 60 Sekunden.
  * </z-faq>
- * <z-faq question="Kann ich später mehr RAM buchen?">
+ * <z-faq question="Kann ich später mehr RAM buchen?" headingLevel="3">
  *   Ja, im Panel unter Upgrade. Der neue Preis gilt ab der nächsten Stunde.
  * </z-faq>
  * ```
@@ -25,7 +28,36 @@ import { booleanAttribute, ChangeDetectionStrategy, Component, input } from '@an
 @Component({
   selector: 'z-faq',
   template: `<details class="z-faq" [open]="open()">
-    <summary>{{ question() }}</summary>
+    @switch (headingLevel()) {
+      @case (2) {
+        <summary>
+          <h2 class="z-faq__q">{{ question() }}</h2>
+        </summary>
+      }
+      @case (3) {
+        <summary>
+          <h3 class="z-faq__q">{{ question() }}</h3>
+        </summary>
+      }
+      @case (4) {
+        <summary>
+          <h4 class="z-faq__q">{{ question() }}</h4>
+        </summary>
+      }
+      @case (5) {
+        <summary>
+          <h5 class="z-faq__q">{{ question() }}</h5>
+        </summary>
+      }
+      @case (6) {
+        <summary>
+          <h6 class="z-faq__q">{{ question() }}</h6>
+        </summary>
+      }
+      @default {
+        <summary>{{ question() }}</summary>
+      }
+    }
     <p class="z-faq__body"><ng-content /></p>
   </details>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,4 +80,19 @@ export class ZFaq {
    * @default false
    */
   readonly open = input(false, { transform: booleanAttribute });
+
+  /**
+   * Makes the question a heading: `2` to `6` for `h2` to `h6`, inside the
+   * `<summary>`. Pick the level below the heading of the FAQ section, usually
+   * `3` under an `h2`. Unset, the `<summary>` holds the bare text as before;
+   * any other value is treated the same. The visual size never changes with it.
+   *
+   * @default undefined
+   */
+  readonly headingLevel = input<
+    2 | 3 | 4 | 5 | 6 | undefined,
+    2 | 3 | 4 | 5 | 6 | '2' | '3' | '4' | '5' | '6' | undefined
+  >(undefined, {
+    transform: (wert) => (wert === undefined ? undefined : (Number(wert) as 2 | 3 | 4 | 5 | 6)),
+  });
 }
