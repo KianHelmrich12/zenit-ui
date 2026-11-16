@@ -85,7 +85,9 @@ export class ZFaq {
    * Makes the question a heading: `2` to `6` for `h2` to `h6`, inside the
    * `<summary>`. Pick the level below the heading of the FAQ section, usually
    * `3` under an `h2`. Unset, the `<summary>` holds the bare text as before;
-   * any other value is treated the same. The visual size never changes with it.
+   * any other value is treated the same. The question keeps the look of the bare
+   * text against heading rules of the application without `!important`; a rule
+   * with `!important` still wins.
    *
    * @default undefined
    */

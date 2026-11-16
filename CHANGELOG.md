@@ -11,7 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **FAQ questions as headings.** `z-faq` takes the optional input `headingLevel` (`2` to `6`, also as a static attribute such as `headingLevel="3"`). With it the question is rendered as `<summary><hN class="z-faq__q">…</hN></summary>`, so the questions of a public page stand in its heading outline below the section heading. The new rule `.z-faq .z-faq__q` removes the browser margin and inherits font and letter spacing from the `<summary>`, so the question looks the same as before, also where the application styles every heading. Without the input, or with any other value, the markup is that of 0.2.3. Guide: `docs/components/faq.md`.
+- **FAQ questions as headings.** `z-faq` takes the optional input `headingLevel` (`2` to `6`, also as a static attribute such as `headingLevel="3"`). With it the question is rendered as `<summary><hN class="z-faq__q">…</hN></summary>`, so the questions of a public page stand in its heading outline below the section heading. The new rule `.z-faq .z-faq__q` removes margin and padding and inherits font, letter spacing, colour, `text-transform` and `text-wrap` from the `<summary>`, so the question looks the same as before, also where the application styles every heading. An application rule with `!important` still wins; the library cannot override it. Without the input, or with any other value, the markup is that of 0.2.3. Guide: `docs/components/faq.md`.
+
+### Fixed
+
+- **FAQ marks out of the accessible name.** The `+` and `−` of `z-faq` were part of the name of the `<summary>` in Chrome ("Wie schnell ist mein Server online? −"). Both marks now carry an empty alt text (`content: "+" / ""`), with the plain `content` before it as a fallback for browsers without alt text.
 
 ## [0.2.3] - 2026-10-16
 

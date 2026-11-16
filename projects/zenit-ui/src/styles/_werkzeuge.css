@@ -84,12 +84,15 @@
 .z-console__input input::placeholder { color: var(--text-subtle); }
 
 /* Faq */
+/* Deviation from the reference: the + and − marks carry an empty alt text
+   (content: "+" / ""), so they stay out of the accessible name of the summary.
+   The declaration before it is the fallback for browsers without alt text. */
 .z-faq { border-top: 1px solid var(--border); }
 .z-faq:last-of-type { border-bottom: 1px solid var(--border); }
 .z-faq summary { display: flex; justify-content: space-between; gap: var(--space-4); padding: var(--space-4) 0; font-size: 16px; line-height: 24px; font-weight: 600; cursor: pointer; list-style: none; }
 .z-faq summary::-webkit-details-marker { display: none; }
-.z-faq summary::after { content: "+"; font-family: var(--font-mono); color: var(--text-muted); }
-.z-faq[open] summary::after { content: "\2212"; }
+.z-faq summary::after { content: "+"; content: "+" / ""; font-family: var(--font-mono); color: var(--text-muted); }
+.z-faq[open] summary::after { content: "\2212"; content: "\2212" / ""; }
 .z-faq__body { max-width: var(--measure); margin: 0; padding: 0 0 var(--space-5); font-size: 16px; line-height: 24px; color: var(--text-muted); }
 
 /* ---------- Angular hosts and additions of the library ---------- */
@@ -101,11 +104,12 @@
    question keeps it, otherwise there would be 2px between the questions. */
 z-faq:not(:last-of-type) .z-faq { border-bottom: 0; }
 
-/* Addition for headingLevel: the question as h2 to h6 looks exactly like the
-   bare summary text (no browser margin, no heading size). The two classes
-   outweigh a global heading rule of the application such as
-   html:not(.font-mono) h3 { font-family; letter-spacing }. */
-.z-faq .z-faq__q { margin: 0; font: inherit; letter-spacing: inherit; }
+/* Addition for headingLevel: the question as h2 to h6 looks like the bare
+   summary text. No browser margin or size; everything an application rule for
+   headings plausibly sets (font, letter spacing, colour, padding, case,
+   text-wrap: balance) is taken back from the summary. The two classes outweigh
+   such a rule without !important; a rule with !important wins anyway. */
+.z-faq .z-faq__q { margin: 0; padding: 0; font: inherit; letter-spacing: inherit; color: inherit; text-transform: inherit; text-wrap: inherit; }
 
 /* The button "Zum Ende" does not appear in the preview, because the preview
    does not scroll. It sits between log and input. Tokens only. */
