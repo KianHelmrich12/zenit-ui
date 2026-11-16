@@ -22,10 +22,11 @@ import { ZFaq } from 'zenit-ui';
 
 Selector: `z-faq`
 
-| Input      | Type      | Default | Description                                                                                 |
-| ---------- | --------- | ------- | ------------------------------------------------------------------------------------------- |
-| `question` | `string`  | `''`    | The question, shown in the `<summary>`. A real question from support, not a headline.       |
-| `open`     | `boolean` | `false` | Whether the answer starts out visible. Boolean attribute, so `open` alone counts as `true`. |
+| Input          | Type                    | Default | Description                                                                                                                                                                                                                                                     |
+| -------------- | ----------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `question`     | `string`                | `''`    | The question, shown in the `<summary>`. A real question from support, not a headline.                                                                                                                                                                           |
+| `open`         | `boolean`               | `false` | Whether the answer starts out visible. Boolean attribute, so `open` alone counts as `true`.                                                                                                                                                                     |
+| `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | none    | Makes the question an `h2` to `h6` inside the `<summary>`, with the class `z-faq__q`. Unset, the `<summary>` holds the bare text. Any other value counts as unset. The look stays that of the bare text against application heading rules without `!important`. |
 
 No outputs. Content projection: the default slot is the answer, rendered inside
 `<p class="z-faq__body">`.
@@ -47,6 +48,19 @@ A block of questions, the first one open:
 </z-faq>
 <z-faq question="Wie kündige ich?">
   Im Panel unter Einstellungen, jederzeit zum Monatsende. Verbrauchte Stunden werden abgerechnet.
+</z-faq>
+```
+
+Below the section heading, every question as an `h3`, so the questions stand in the heading outline
+of the page:
+
+```html
+<h2>Häufige Fragen</h2>
+<z-faq question="Wie schnell ist mein Server online?" headingLevel="3" open>
+  Nach der Bestellung dauert die Einrichtung in der Regel etwa 60 Sekunden.
+</z-faq>
+<z-faq question="Kann ich später mehr RAM buchen?" headingLevel="3">
+  Ja, im Panel unter Upgrade. Der neue Preis gilt ab der nächsten Stunde.
 </z-faq>
 ```
 
@@ -83,7 +97,13 @@ There is no disabled, loading, error or empty state.
 - The markup is a native `<details>`/`<summary>`, so opening and closing work without JavaScript,
   the disclosure is reachable by keyboard and its expanded state is announced. The component adds
   no keyboard handling of its own.
-- The `+` and `−` marks are CSS `content`, so they are not part of the accessible name.
+- The `+` and `−` marks are CSS `content` with an empty alt text, so they are not part of the
+  accessible name.
+- On a public page set `headingLevel` one below the heading of the FAQ section, usually `3` under an
+  `h2`. The question then becomes `<summary><h3 class="z-faq__q">…</h3></summary>`, which HTML
+  allows, and a screen reader user can jump from question to question by heading. Without it the
+  questions are not in the outline. Whether every screen reader announces a heading inside a
+  `<summary>` as such has not been tested.
 - Answers are capped at the `measure` width, so a long answer stays readable.
 - For search engines, output the same questions additionally as `FAQPage` JSON-LD. That is the
   caller's job; the component emits no structured data.
@@ -96,10 +116,11 @@ Nothing changes at the breakpoints.
 
 ## Rendered classes and tokens
 
-| Class         | Applies when        |
-| ------------- | ------------------- |
-| `z-faq`       | on the `<details>`  |
-| `z-faq__body` | on the answer `<p>` |
+| Class         | Applies when                                                    |
+| ------------- | --------------------------------------------------------------- |
+| `z-faq`       | on the `<details>`                                              |
+| `z-faq__body` | on the answer `<p>`                                             |
+| `z-faq__q`    | on the heading inside the `<summary>`, only with `headingLevel` |
 
 Tokens: `--space-4` and `--space-5` for the padding, `--border` for the lines, `--text-muted` for
 the mark and the answer, `--measure` as the maximum answer width, `--font-mono` for the mark. The
@@ -110,6 +131,16 @@ the mark and the answer, `--measure` as the maximum answer width, `--font-mono` 
 Addition to the library: every question sits in a `z-faq` of its own, which makes every `<details>`
 the `:last-of-type` of its host and would give each one a bottom line. Only the last question keeps
 it, otherwise there would be 2px between the questions.
+
+Addition to the library: `headingLevel` and the class `z-faq__q`. The heading takes no margin or
+padding and inherits font, letter spacing, colour, `text-transform` and `text-wrap` from the
+`<summary>`, so it looks like the bare text even where the application styles every heading (for
+example with a display font or `text-wrap: balance`). A rule of the application with `!important`
+still wins; the library cannot override it.
+
+Deviation from the reference: the `+` and `−` marks carry an empty alt text (`content: "+" / ""`),
+so they are not part of the accessible name. A plain `content` before it keeps the mark in browsers
+without alt text.
 
 ## Do / Don't
 

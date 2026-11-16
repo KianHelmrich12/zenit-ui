@@ -177,14 +177,14 @@ const PREIS_JE_STECKPLATZ = 0.2;
       <div class="z-stack">
         <h2 class="heading-2 demo-flach">Häufige Fragen</h2>
         <div>
-          <z-faq question="Wie schnell ist mein Server online?" open>
+          <z-faq question="Wie schnell ist mein Server online?" headingLevel="3" open>
             Nach der Bestellung dauert die Einrichtung in der Regel etwa 60 Sekunden. Große Modpacks
             brauchen beim ersten Start länger, weil sie erst heruntergeladen werden.
           </z-faq>
-          <z-faq question="Kann ich später mehr RAM buchen?">
+          <z-faq question="Kann ich später mehr RAM buchen?" headingLevel="3">
             Ja, im Panel unter Upgrade. Der neue Preis gilt ab der nächsten Stunde.
           </z-faq>
-          <z-faq question="Wie wird abgerechnet?">
+          <z-faq question="Wie wird abgerechnet?" headingLevel="3">
             Nach Stunden von deinem Guthaben, nach oben gedeckelt auf den Monatspreis.
           </z-faq>
         </div>

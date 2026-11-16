@@ -14,6 +14,26 @@ class FaqHost {
   readonly offen = signal(false);
 }
 
+@Component({
+  imports: [ZFaq],
+  template: `<z-faq question="Wie schnell ist mein Server online?" [headingLevel]="stufe()"
+    >Etwa 60 Sekunden.</z-faq
+  >`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class StufenHost {
+  readonly stufe = signal<2 | 3 | 4 | 5 | 6 | undefined>(undefined);
+}
+
+@Component({
+  imports: [ZFaq],
+  template: `<z-faq question="Wie schnell ist mein Server online?" headingLevel="3"
+    >Etwa 60 Sekunden.</z-faq
+  >`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class AttributHost {}
+
 describe('ZFaq', () => {
   function baue(): { details: HTMLDetailsElement; host: FaqHost; rendere: () => void } {
     const fixture = TestBed.createComponent(FaqHost);
@@ -71,5 +91,67 @@ describe('ZFaq', () => {
     expect(body.textContent?.trim()).toBe(
       'Nach der Bestellung dauert die Einrichtung in der Regel etwa 60 Sekunden.',
     );
+  });
+
+  it('keeps the summary as bare text without headingLevel, as in 0.2.3', () => {
+    const { details } = baue();
+
+    expect(details.querySelector('summary')?.outerHTML).toBe(
+      '<summary>Wie schnell ist mein Server online?</summary>',
+    );
+    expect(details.querySelector('.z-faq__q')).toBeNull();
+  });
+
+  it('puts exactly one heading h2 to h6 into the summary and re-renders on a new level', () => {
+    const fixture = TestBed.createComponent(StufenHost);
+    fixture.detectChanges();
+    const details = fixture.nativeElement.querySelector('details.z-faq') as HTMLDetailsElement;
+
+    for (const stufe of [2, 3, 4, 5, 6, undefined, 4] as const) {
+      fixture.componentInstance.stufe.set(stufe);
+      fixture.detectChanges();
+      const summaries = details.querySelectorAll('summary');
+
+      expect(summaries.length).toBe(1);
+      expect(details.firstElementChild).toBe(summaries[0]);
+      if (stufe === undefined) {
+        expect(summaries[0].children.length).toBe(0);
+        expect(details.querySelector('.z-faq__q')).toBeNull();
+      } else {
+        expect(summaries[0].children.length).toBe(1);
+        expect(details.querySelectorAll('summary > .z-faq__q').length).toBe(1);
+        expect(details.querySelector(`summary > h${stufe}.z-faq__q`)?.textContent).toBe(
+          'Wie schnell ist mein Server online?',
+        );
+      }
+    }
+  });
+
+  it('takes headingLevel as a static attribute', () => {
+    const fixture = TestBed.createComponent(AttributHost);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('summary > h3.z-faq__q')?.textContent).toBe(
+      'Wie schnell ist mein Server online?',
+    );
+  });
+
+  it('renders no heading for a level outside 2 to 6', () => {
+    const fixture = TestBed.createComponent(ZFaq);
+    fixture.componentRef.setInput('question', 'Wie schnell ist mein Server online?');
+
+    for (const stufe of [1, 7, '1', '7']) {
+      fixture.componentRef.setInput('headingLevel', 3);
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelector('summary > h3.z-faq__q')).not.toBeNull();
+
+      fixture.componentRef.setInput('headingLevel', stufe);
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelector('summary')?.outerHTML).toBe(
+        '<summary>Wie schnell ist mein Server online?</summary>',
+      );
+    }
   });
 });
